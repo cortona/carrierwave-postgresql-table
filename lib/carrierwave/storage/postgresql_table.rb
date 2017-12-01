@@ -123,7 +123,7 @@ module CarrierWave
         end
 
         def url(options = {})
-          ::File.join("/", @path)
+          CarrierWave::Uploader::Base.asset_host + ::File.join("/", @path)
         end
 
         def store(new_file)
