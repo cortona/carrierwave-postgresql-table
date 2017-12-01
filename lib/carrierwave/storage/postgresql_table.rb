@@ -180,7 +180,7 @@ module CarrierWave
         def move_to(new_path)
           CarrierWaveFile.transaction do
             # Remove any existing files at the current path.
-            CarrierWaveFile.delete_all_files("path = #{CarrierWaveFile.sanitize(new_path)} AND id != #{CarrierWaveFile.sanitize(@record.id)}")
+            CarrierWaveFile.delete_all_files("path = #{CarrierWaveFile.sanitize(new_path)} AND id != #{@record.id}")
 
             # Change the current record's path to the new path.
             @record.update_attribute(:path, new_path)
@@ -188,7 +188,7 @@ module CarrierWave
         end
 
         def delete
-          CarrierWaveFile.delete_all_files("id = #{CarrierWaveFile.sanitize(@record.id)}")
+          CarrierWaveFile.delete_all_files("id = #{@record.id}")
         end
 
         private
