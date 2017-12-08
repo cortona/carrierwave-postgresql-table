@@ -33,6 +33,7 @@ module CarrierWave
 
       def clean_cache!(seconds)
         time = Time.now - seconds.seconds
+        byebug
         CarrierWaveFile.delete_all_files("path LIKE #{CarrierWaveFile.sanitize(::File.join(uploader.cache_dir, "%"))} AND updated_at < #{CarrierWaveFile.sanitize(time)}")
       end
 
@@ -41,6 +42,7 @@ module CarrierWave
 
         def self.delete_all_files(conditions)
           self.transaction do
+            byebug
             self.connection.execute("SELECT lo_unlink(pg_largeobject_oid) FROM (SELECT DISTINCT pg_largeobject_oid FROM #{self.table_name} WHERE #{conditions}) AS oids")
             self.where(conditions).delete_all
           end
@@ -180,6 +182,7 @@ module CarrierWave
         def move_to(new_path)
           CarrierWaveFile.transaction do
             # Remove any existing files at the current path.
+            byebug
             CarrierWaveFile.delete_all_files("path = #{CarrierWaveFile.sanitize(new_path)} AND id != #{@record.id}")
 
             # Change the current record's path to the new path.
@@ -188,6 +191,7 @@ module CarrierWave
         end
 
         def delete
+          byebug
           CarrierWaveFile.delete_all_files("id = #{@record.id}")
         end
 
